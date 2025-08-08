@@ -132,158 +132,109 @@ historical results.
 
 ### Feature: Approving Temperature Set Point Changes
 
-**Scenario: Approve set point change with clear predicted savings**
-- Given Alex the Facility Manager reviews a recommended set point change with predicted energy savings of 10%
-- When Alex views the scenario analysis for thermal effects in Zone A
-- Then Alex should see that SLA compliance and equipment longevity are not at risk
+**Scenario Outline: Approve or reject set point change with varied inputs**
+- Given <actor> the Facility Manager reviews a recommended set point change
+    | input                  | predicted_savings | risk_level      |
+    | <input>                | <savings>         | <risk>          |
+- When <actor> views the scenario analysis
+- Then <actor> should see <result>
 
-**Scenario: Reject set point change due to high risk**
-- Given Jamie the Facility Manager reviews a recommended set point change with predicted temperature near SLA threshold
-- When Jamie views the risk assessment
-- Then Jamie should see a warning and reject the change
-
-**Scenario: Approve set point change with automatic approval enabled**
-- Given Morgan the Facility Manager has enabled automatic approvals for low-risk changes
-- When Morgan receives a recommendation within safe parameters
-- Then Morgan should see the change auto-approved
+Examples:
+    | actor   | input   | savings | risk      | result                                         |
+    | Alex    | 22      | 10%     | low       | SLA compliance and equipment longevity are not at risk |
+    | Jamie   | 30      | 5%      | high      | warning and reject the change                  |
+    | Casey   | banana  |         |           | error about invalid input                      |
+    | Morgan  | 24      | 8%      | low       | change auto-approved                           |
+    | Taylor  |         |         |           | error about missing input                      |
 
 **Scenario: Interrupt approval process before completion**
 - Given Taylor the Facility Manager starts to approve a set point change
 - When Taylor closes the approval dialog before confirming
 - Then Taylor should see that no change has been made
 
-**Scenario: Approve set point change with nonsense input**
-- Given Casey the Facility Manager enters "banana" as the temperature set point
-- When Casey submits the change
-- Then Casey should see an error about invalid input
+**Scenario Outline: Approve set point change with automatic/manual conditions**
+- Given <actor> the Facility Manager reviews a recommendation
+    | condition            | confidence | threshold | scenario_type   |
+    | <condition>          | <conf>     | <thresh>  | <type>          |
+- When <actor> views the scenario analysis
+- Then <actor> should see <result>
 
-**Scenario: Approve set point change in stable operating range**
-- Given Alex the Facility Manager reviews a recommendation within the defined safe zone
-- When Alex views the scenario analysis
-- Then Alex should see the change auto-approved
-
-**Scenario: Approve set point change with high confidence**
-- Given Morgan the Facility Manager reviews a moderate set point adjustment with high model confidence
-- When Morgan views the recommendation
-- Then Morgan should see the change auto-approved
-
-**Scenario: Emergency override triggers automatic actuation**
-- Given Jamie the Facility Manager reviews a recommendation during a rapid temperature increase
-- When Jamie views the emergency override alert
-- Then Jamie should see the change auto-applied automatically
-
-**Scenario: Manual approval required for low confidence**
-- Given Taylor the Facility Manager reviews a recommendation flagged with low confidence
-- When Taylor views the risk assessment
-- Then Taylor should see a prompt for manual approval
-
-**Scenario: Manual approval required for critical threshold adjustment**
-- Given Casey the Facility Manager reviews a recommendation near the SLA threshold
-- When Casey views the scenario analysis
-- Then Casey should see a prompt for manual approval
-
-**Scenario: Manual approval required for novel scenario**
-- Given Riley the Facility Manager reviews a recommendation for a first-time data pattern
-- When Riley views the explanation
-- Then Riley should see a prompt for manual approval
-
-**Scenario: Manual approval required for maintenance consideration**
-- Given Jordan the Facility Manager reviews a recommendation that may affect equipment longevity
-- When Jordan views the maintenance warning
-- Then Jordan should see a prompt for manual approval
+Examples:
+    | actor   | condition         | conf   | thresh | type      | result                        |
+    | Alex    | stable            | high   | safe   | normal    | change auto-approved          |
+    | Jamie   | emergency         | high   | breach | override  | change auto-applied automatically |
+    | Taylor  | unstable          | low    | near   | anomaly   | prompt for manual approval    |
+    | Casey   | novel             | mid    | safe   | first-time| prompt for manual approval    |
+    | Jordan  | maintenance       | mid    | safe   | wear      | prompt for manual approval    |
 
 ### Feature: Monitoring SLA Compliance
 
-**Scenario: View real-time SLA status after set point change**
-- Given Riley the Facility Manager approves a set point change
-- When Riley views the dashboard
-- Then Riley should see updated SLA compliance status
+**Scenario Outline: View SLA compliance status after set point change**
+- Given <actor> the Facility Manager approves a set point change
+    | change_id |
+    | <id>      |
+- When <actor> views the dashboard
+- Then <actor> should see <sla_status>
 
-**Scenario: Receive notification when safety margin is approached**
-- Given Jordan the Facility Manager sets a safety margin of 2°C below SLA threshold
-- When a recommendation approaches within 1°C of the margin
-- Then Jordan should receive a notification
+Examples:
+    | actor  | id   | sla_status                |
+    | Riley  | 101  | updated SLA compliance    |
+    | Sam    | 102  | SLA breach warning        |
+
+**Scenario Outline: Receive notification when safety margin is approached**
+- Given <actor> the Facility Manager sets a safety margin
+    | margin | threshold |
+    | <m>    | <t>       |
+- When a recommendation approaches within <delta> of the margin
+- Then <actor> should receive <notification>
+
+Examples:
+    | actor   | m   | t   | delta | notification         |
+    | Jordan  | 2   | 20  | 1     | notification        |
+    | Pat     | 0   | 20  | 0     | warning             |
 
 ### Feature: Reviewing Historical Performance
 
-**Scenario: Compare pre- and post-recommendation impacts**
-- Given Sam the Facility Manager views the historical dashboard
-- When Sam compares energy consumption before and after a set point change
-- Then Sam should see a report showing the difference in energy use and temperature stability
+**Scenario Outline: Compare pre- and post-recommendation impacts**
+- Given <actor> the Facility Manager views the historical dashboard
+    | date_range |
+    | <range>    |
+- When <actor> compares energy consumption before and after a set point change
+- Then <actor> should see <report>
 
-**Scenario: View historical data with missing entries**
-- Given Pat the Facility Manager views the historical dashboard
-- When Pat selects a date range with missing data
-- Then Pat should see a message indicating incomplete records
-
----
-
-## Additional BDD Features and Scenarios
+Examples:
+    | actor | range         | report                                 |
+    | Sam   | 2023-01-01    | difference in energy use and stability |
+    | Pat   | missing       | message indicating incomplete records  |
 
 ### Feature: Predictive Modelling and Impact Display
 
-**Scenario: View predicted impacts for multiple zones**
-- Given Alex the Facility Manager reviews a set point change
-- When Alex views predicted impacts for Zone A, Zone B, and Zone C
-- Then Alex should see energy savings and thermal effects for each zone
+**Scenario Outline: View predicted impacts for multiple zones**
+- Given <actor> the Facility Manager reviews a set point change
+    | zones             |
+    | <zone_list>       |
+- When <actor> views predicted impacts
+- Then <actor> should see <impact>
 
-**Scenario: View predicted impacts with zero expected savings**
-- Given Jamie the Facility Manager reviews a set point change
-- When Jamie views the scenario analysis showing 0% energy savings
-- Then Jamie should see a recommendation not to proceed
-
-**Scenario: View predicted impacts with maximum allowed temperature**
-- Given Morgan the Facility Manager reviews a set point change to the highest allowed temperature
-- When Morgan views the predicted impacts
-- Then Morgan should see a warning about possible SLA risk
-
-### Feature: Justification and Explanation
-
-**Scenario: View plain-language explanation for recommendation**
-- Given Taylor the Facility Manager reviews a recommended change
-- When Taylor views the explanation
-- Then Taylor should see how the change aligns with occupancy and energy load
-
-**Scenario: View explanation for recommendation with ambiguous data**
-- Given Casey the Facility Manager reviews a recommendation based on incomplete occupancy data
-- When Casey views the explanation
-- Then Casey should see a note about missing data
-
-### Feature: SLA and Compliance Monitoring
-
-**Scenario: View SLA compliance status for multiple recommendations**
-- Given Riley the Facility Manager reviews three recommended changes
-- When Riley views the SLA compliance status for each
-- Then Riley should see which changes are within SLA and which are not
-
-**Scenario: View SLA compliance with nonsense input**
-- Given Jordan the Facility Manager enters "hotdog" as a set point
-- When Jordan views SLA compliance status
-- Then Jordan should see an error about invalid input
-
-### Feature: Safety Margins and Notifications
-
-**Scenario: Set safety margin to zero**
-- Given Sam the Facility Manager sets the safety margin to 0°C
-- When Sam reviews a recommendation at the SLA threshold
-- Then Sam should receive a warning
-
-**Scenario: Receive notification for multiple margin breaches**
-- Given Pat the Facility Manager sets safety margins for temperature and humidity
-- When recommendations approach both margins
-- Then Pat should receive notifications for each metric
+Examples:
+    | actor | zone_list           | impact                                 |
+    | Alex  | Zone A, Zone B, C   | energy savings and thermal effects     |
+    | Jamie | Zone D              | recommendation not to proceed          |
 
 ### Feature: Approval Process Customization
 
-**Scenario: Enable automatic approval for all changes**
-- Given Alex the Facility Manager enables automatic approval for all recommendations
-- When Alex receives a high-risk recommendation
-- Then Alex should see a prompt to manually review
+**Scenario Outline: Approve multiple changes in one click**
+- Given <actor> the Facility Manager selects recommendations
+    | recommendations |
+    | <count>         |
+- When <actor> clicks approve
+- Then <actor> should see <result>
 
-**Scenario: Approve multiple changes in one click**
-- Given Jamie the Facility Manager selects three recommendations
-- When Jamie clicks approve
-- Then Jamie should see all three changes approved
+Examples:
+    | actor  | count | result                        |
+    | Jamie  | 3     | all three changes approved    |
+    | Morgan | 1     | pre- and post-impact data     |
+    | Taylor | 0     | message indicating nothing changed |
 
 ### Feature: Historical Performance and Reporting
 
