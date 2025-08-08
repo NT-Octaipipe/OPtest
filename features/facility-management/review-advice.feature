@@ -12,6 +12,7 @@ The FM can accept the advice or view more detailed analysis
     Given Felicity has opened their portal
     # Reference site restored to known state
 
+# This should just be a chart check
   Scenario: Facility Manager reviews TimeMachine advice
     When Felicity views the "TimeMachine" Explainer
     Then Felicity sees that the advice includes:

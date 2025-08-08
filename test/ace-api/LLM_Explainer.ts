@@ -2,6 +2,8 @@ import { Ensure, equals, includes } from "@serenity-js/assertions";
 import { Log, Task } from "@serenity-js/core";
 import { LastResponse, PostRequest, Send } from "@serenity-js/rest";
 
+// http://test.ace.octaipipe.ai:5104/swagger/index.html
+
 export const LLM_Explainer = {
     getAdvice: (siteData: object) => 
         Task.where(`#actor requests advice for site`,

@@ -27,6 +27,7 @@ Then(
     ),
 );
 
+// TODO: Update this to use the tabs in See Our Logic from the Zone 1 link on the right of the dashboard
 When(
   "{actor} views the {string} Explainer",
   async (actor: Actor, sectionName: string) =>
@@ -41,6 +42,7 @@ Then(
     )
 );
 
+// TODO: Update this to use the SLA tab in See Our Logic from the Zone 1 link on the right of the dashboard
 When("{actor} views the SLA Boundaries", async (actor: Actor) =>
   actor.attemptsTo(SLA.fetchData())
 );
@@ -51,6 +53,7 @@ Then(
     actor.attemptsTo(Explainer.checkSLAZonesMatch(zoneData))
 );
 
+// TODO: Update this to use the Zone 1 link on the right of the dashboard
 When('{actor} accepts the advice about {string}', async (actor: Actor, setPoint: string) =>
   actor.attemptsTo(
     Explainer.chooseAdvice("AgentRecommendation"),
