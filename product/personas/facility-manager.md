@@ -254,61 +254,78 @@ Examples:
 
 ### Feature: Approval Process Edge Cases
 
-**Scenario: Approve set point change with minimum allowed temperature**
-- Given Alex the Facility Manager reviews a recommendation for the lowest allowed temperature
-- When Alex views the predicted impacts
-- Then Alex should see confirmation that SLA compliance is maintained
+**Scenario Outline: Approve set point change at allowed temperature edges**
+- Given <actor> the Facility Manager reviews a recommendation for a temperature
+    | temperature |
+    | <temp>      |
+- When <actor> views the predicted impacts
+- Then <actor> should see <result>
 
-**Scenario: Approve set point change with maximum allowed temperature**
-- Given Jamie the Facility Manager reviews a recommendation for the highest allowed temperature
-- When Jamie views the risk assessment
-- Then Jamie should see a warning about SLA risk
+Examples:
+    | actor  | temp | result                                   |
+    | Alex   | min  | confirmation that SLA compliance is maintained |
+    | Jamie  | max  | warning about SLA risk                   |
 
-**Scenario: Approve multiple set point changes at once**
-- Given Morgan the Facility Manager selects five recommendations
-- When Morgan clicks approve
-- Then Morgan should see all five changes approved
+**Scenario Outline: Approve multiple set point changes**
+- Given <actor> the Facility Manager selects recommendations
+    | recommendations |
+    | <count>         |
+- When <actor> clicks approve
+- Then <actor> should see <result>
 
-**Scenario: Interrupt approval process after selecting recommendations**
-- Given Taylor the Facility Manager selects two recommendations to approve
-- When Taylor closes the approval dialog before confirming
-- Then Taylor should see that no changes have been made
+Examples:
+    | actor  | count | result                   |
+    | Morgan | 5     | all five changes approved|
+    | Taylor | 2     | no changes have been made|
 
-**Scenario: Submit set point change with empty input**
-- Given Casey the Facility Manager leaves the temperature set point blank
-- When Casey submits the change
-- Then Casey should see an error about missing input
+**Scenario Outline: Submit set point change with invalid input**
+- Given <actor> the Facility Manager enters a temperature set point
+    | input   |
+    | <value> |
+- When <actor> submits the change
+- Then <actor> should see <result>
+
+Examples:
+    | actor  | value   | result                   |
+    | Casey  |         | error about missing input|
+    | Sam    | hotdog  | error about invalid input|
 
 ### Feature: SLA Compliance Monitoring Edge Cases
 
-**Scenario: View SLA compliance with zero recommendations**
-- Given Riley the Facility Manager views the dashboard with no recommendations
-- When Riley checks SLA compliance status
-- Then Riley should see a message indicating no changes to review
+**Scenario Outline: View SLA compliance with recommendations**
+- Given <actor> the Facility Manager views the dashboard
+    | recommendations |
+    | <count>         |
+- When <actor> checks SLA compliance status
+- Then <actor> should see <result>
 
-**Scenario: Receive notification for simultaneous margin breaches**
-- Given Jordan the Facility Manager sets safety margins for temperature and humidity
-- When recommendations approach both margins at once
-- Then Jordan should receive notifications for each metric
+Examples:
+    | actor  | count | result                        |
+    | Riley  | 0     | message indicating no changes to review |
+    | Sam    | 1     | SLA compliance status         |
 
-**Scenario: View SLA compliance with nonsense input**
-- Given Sam the Facility Manager enters "hotdog" as a set point
-- When Sam views SLA compliance status
-- Then Sam should see an error about invalid input
+**Scenario Outline: Receive notification for margin breaches**
+- Given <actor> the Facility Manager sets safety margins
+    | metrics        |
+    | <metric_list>  |
+- When recommendations approach the margins
+- Then <actor> should receive <notification>
+
+Examples:
+    | actor   | metric_list           | notification                  |
+    | Jordan  | temperature, humidity | notifications for each metric |
 
 ### Feature: Historical Performance Reporting Edge Cases
 
-**Scenario: View historical data for a day with no recommendations**
-- Given Pat the Facility Manager views the dashboard
-- When Pat selects a day with no recommendations
-- Then Pat should see a message indicating no data available
+**Scenario Outline: View historical data for date ranges**
+- Given <actor> the Facility Manager views the dashboard
+    | date_range |
+    | <range>    |
+- When <actor> selects the date range
+- Then <actor> should see <result>
 
-**Scenario: View historical data with invalid date range**
-- Given Alex the Facility Manager enters "tomorrow to yesterday" as the date range
-- When Alex views the dashboard
-- Then Alex should see an error about invalid date range
-
-**Scenario: Compare historical impacts with only one recommendation**
-- Given Jamie the Facility Manager views the historical dashboard
-- When Jamie selects a day with a single recommendation
-- Then Jamie should see pre- and post-impact data for that day
+Examples:
+    | actor | range                | result                          |
+    | Pat   | no recommendations   | message indicating no data available |
+    | Alex  | tomorrow to yesterday| error about invalid date range  |
+    | Jamie | single recommendation| pre- and post-impact data       |
