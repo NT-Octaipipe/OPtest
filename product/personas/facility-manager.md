@@ -219,3 +219,68 @@ historical results.
 - Given Taylor the Facility Manager enters "yesterday to banana" as the date range
 - When Taylor views the dashboard
 - Then Taylor should see an error about invalid date range
+
+---
+
+## Additional BDD Features and Scenarios
+
+### Feature: Approval Process Edge Cases
+
+**Scenario: Approve set point change with minimum allowed temperature**
+- Given Alex the Facility Manager reviews a recommendation for the lowest allowed temperature
+- When Alex views the predicted impacts
+- Then Alex should see confirmation that SLA compliance is maintained
+
+**Scenario: Approve set point change with maximum allowed temperature**
+- Given Jamie the Facility Manager reviews a recommendation for the highest allowed temperature
+- When Jamie views the risk assessment
+- Then Jamie should see a warning about SLA risk
+
+**Scenario: Approve multiple set point changes at once**
+- Given Morgan the Facility Manager selects five recommendations
+- When Morgan clicks approve
+- Then Morgan should see all five changes approved
+
+**Scenario: Interrupt approval process after selecting recommendations**
+- Given Taylor the Facility Manager selects two recommendations to approve
+- When Taylor closes the approval dialog before confirming
+- Then Taylor should see that no changes have been made
+
+**Scenario: Submit set point change with empty input**
+- Given Casey the Facility Manager leaves the temperature set point blank
+- When Casey submits the change
+- Then Casey should see an error about missing input
+
+### Feature: SLA Compliance Monitoring Edge Cases
+
+**Scenario: View SLA compliance with zero recommendations**
+- Given Riley the Facility Manager views the dashboard with no recommendations
+- When Riley checks SLA compliance status
+- Then Riley should see a message indicating no changes to review
+
+**Scenario: Receive notification for simultaneous margin breaches**
+- Given Jordan the Facility Manager sets safety margins for temperature and humidity
+- When recommendations approach both margins at once
+- Then Jordan should receive notifications for each metric
+
+**Scenario: View SLA compliance with nonsense input**
+- Given Sam the Facility Manager enters "hotdog" as a set point
+- When Sam views SLA compliance status
+- Then Sam should see an error about invalid input
+
+### Feature: Historical Performance Reporting Edge Cases
+
+**Scenario: View historical data for a day with no recommendations**
+- Given Pat the Facility Manager views the dashboard
+- When Pat selects a day with no recommendations
+- Then Pat should see a message indicating no data available
+
+**Scenario: View historical data with invalid date range**
+- Given Alex the Facility Manager enters "tomorrow to yesterday" as the date range
+- When Alex views the dashboard
+- Then Alex should see an error about invalid date range
+
+**Scenario: Compare historical impacts with only one recommendation**
+- Given Jamie the Facility Manager views the historical dashboard
+- When Jamie selects a day with a single recommendation
+- Then Jamie should see pre- and post-impact data for that day
