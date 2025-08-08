@@ -14,7 +14,8 @@ When defining scenarios, consider the following:
 ### Step definitions
 Step definitions will use the Serenity/JS framework.
 Step definitions should have an Actor parameter and be a single-line arrow function, without curly braces.
-Step definitions will defer the logic of steps and questions to objects and methods in the /test folder
+Step definitions will defer the logic of steps and questions to objects and methods in the /test folder.
+When suggesting code for step definitions use Serenity/JS with Playwright.
 
 ### Test support functions
 Define the logic of Task and Question interactions using object definitions in the /test folder

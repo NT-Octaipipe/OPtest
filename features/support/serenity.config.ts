@@ -37,7 +37,7 @@ BeforeAll(async () => {
         actors: new Actors(
             browser,
             {
-                baseURL: 'http://127.0.0.1:3000/',
+                baseURL: 'http://test.ace.octaipipe.ai/',
             },
             {
                 defaultNavigationTimeout: timeouts.playwright.defaultNavigationTimeout.inMilliseconds(),

@@ -46,7 +46,7 @@ Then(
     actor.attemptsTo(Explainer.checkSLAZonesMatch(zoneData))
 );
 
-When('{actor} accepts the advice about {string}', async (actor: Actor, setPoint: string) => 
+When('{actor} accepts the advice about {string}', async (actor: Actor, setPoint: string) =>
   actor.attemptsTo(
     Explainer.chooseAdvice("AgentRecommendation"),
     Explainer.acceptAdvice()
