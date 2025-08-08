@@ -23,7 +23,7 @@ Then(
   "{pronoun} see(s) that the ESG data is correct",
   async (actor: Actor, data: DataTable) =>
     actor.attemptsTo(
-      ESG.compareMetric(data, "KPI"),
+      ESG.compareMetric(data, "ESG"),
     ),
 );
 
