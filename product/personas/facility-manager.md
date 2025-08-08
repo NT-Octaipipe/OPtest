@@ -5,6 +5,8 @@ directly responsible for operational stability and equipment performance, and fa
 technicalities and operational risks associated with HVAC adjustments. Given their close oversight of both HVAC and SLA
 compliance, they would be motivated to maintain tight control over set point changes.​
 
+
+
 ​
 
 ## Key UX/UI Considerations:​
@@ -71,6 +73,46 @@ The approval process should be simple yet customizable, allowing facility
 managers to streamline approvals in cases where confidence is high, while retaining more hands-on
 control for higher-impact changes.​
 
+#### Constraints
+For certain cases, allowing the model to make automatic decisions may
+optimize efficiency. However, specific conditions should determine when
+automatic actuation is permitted:​
+
+##### Automatic Actuation Conditions:​
+
+###### Stable Operating Range: 
+- Automatic adjustments could be allowed if conditions are within a defined “safe zone” of stability, where small fluctuations will not risk SLAs or equipment performance. This could include situations where:​
+- - Ambient and internal temperatures are within a certain tolerance range.​
+- - Energy demand patterns align with the model’s historical data (e.g., typical usage patterns seasonal norms).​
+
+- High Confidence Scenarios: If the model has consistently high confidence in a
+particular recommendation type (e.g., moderate set point adjustments), automatic
+actuation might be allowed within pre-set thresholds.​
+
+- Emergency Overrides: The model should be allowed to override thresholds
+automatically in response to urgent conditions, such as rapid increases in temperature
+beyond typical bounds, which could impact equipment safety or SLAs.
+
+##### Conditions Requiring Manual Approval:​
+
+###### Low Confidence and Anomalous Situations: 
+Recommendations with low confidence scores or flagged anomalies should always require manual approval to ensure scrutiny of potentially unstable decisions.​
+
+###### Critical Threshold Adjustments: 
+Any adjustments that approach SLA or regulatory thresholds, or recommendations that involve substantial temperature changes, should require manual approval to reduce the risk of breaching comfort or
+compliance levels.​
+
+###### First-Time or Novel Scenarios: 
+When the model encounters a scenario or data
+pattern for which it has limited historical context, it’s beneficial to involve a human
+for validation before implementing any changes.​
+
+###### Maintenance and Equipment Wear Considerations: 
+If a recommended set point
+adjustment could affect equipment longevity (e.g., frequent on-off cycles or large
+temperature shifts), manual review by Facility Managers would ensure no adverse
+impacts on HVAC equipment life.
+
 ​
 
 ### Historical Performance and Reporting:​
@@ -114,6 +156,41 @@ historical results.
 - Given Casey the Facility Manager enters "banana" as the temperature set point
 - When Casey submits the change
 - Then Casey should see an error about invalid input
+
+**Scenario: Approve set point change in stable operating range**
+- Given Alex the Facility Manager reviews a recommendation within the defined safe zone
+- When Alex views the scenario analysis
+- Then Alex should see the change auto-approved
+
+**Scenario: Approve set point change with high confidence**
+- Given Morgan the Facility Manager reviews a moderate set point adjustment with high model confidence
+- When Morgan views the recommendation
+- Then Morgan should see the change auto-approved
+
+**Scenario: Emergency override triggers automatic actuation**
+- Given Jamie the Facility Manager reviews a recommendation during a rapid temperature increase
+- When Jamie views the emergency override alert
+- Then Jamie should see the change auto-applied automatically
+
+**Scenario: Manual approval required for low confidence**
+- Given Taylor the Facility Manager reviews a recommendation flagged with low confidence
+- When Taylor views the risk assessment
+- Then Taylor should see a prompt for manual approval
+
+**Scenario: Manual approval required for critical threshold adjustment**
+- Given Casey the Facility Manager reviews a recommendation near the SLA threshold
+- When Casey views the scenario analysis
+- Then Casey should see a prompt for manual approval
+
+**Scenario: Manual approval required for novel scenario**
+- Given Riley the Facility Manager reviews a recommendation for a first-time data pattern
+- When Riley views the explanation
+- Then Riley should see a prompt for manual approval
+
+**Scenario: Manual approval required for maintenance consideration**
+- Given Jordan the Facility Manager reviews a recommendation that may affect equipment longevity
+- When Jordan views the maintenance warning
+- Then Jordan should see a prompt for manual approval
 
 ### Feature: Monitoring SLA Compliance
 
