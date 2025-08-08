@@ -9,8 +9,9 @@ Feature: Manage Site
 
   Scenario: Facility Manager sees current KPIs
     Given Felicity has opened their portal
-    When they check their KPIs
-    Then they see that the KPI data is current
+    When they check their "Current" ESG
+    Then they see that the ESG data is correct
       | KPI | Expected Value |
-      | PUE |           1.33 |
-      | WUE |           1.56 |
+      | PUE |          1.190 |
+      | WUE |          0.000 |
+      | CUE |          0.847 |

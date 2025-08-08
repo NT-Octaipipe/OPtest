@@ -2,9 +2,9 @@ import { DataTable, Given, Then, When } from "@cucumber/cucumber";
 import { Actor } from "@serenity-js/core";
 import { Navigate } from "@serenity-js/web";
 import { User } from "../../test/ace-ui/User";
-import { Table } from "../../test/ace-ui/Table";
 import { Explainer } from "../../test/ace-ui/Explainer";
 import { SLA } from "../../test/ace-api/SLA";
+import { ESG } from "../../test/ace-ui/ESG";
 
 // make sure step functions are async and do not wrap the actor clause in {}
 
@@ -12,14 +12,19 @@ Given("{actor} has opened their portal", async (actor: Actor) =>
   actor.attemptsTo(User.login())
 );
 
-When("{pronoun} check their KPIs", async (actor: Actor) =>
-  actor.attemptsTo(Navigate.to("/site-manager.html"))
+When("{pronoun} check their {string} ESG", async (actor: Actor, view: string) =>
+  actor.attemptsTo(
+    Navigate.to("/dashboard/overview"),
+    ESG.switchView(view)
+  )
 );
 
 Then(
-  "{pronoun} see(s) that the KPI data is current",
+  "{pronoun} see(s) that the ESG data is correct",
   async (actor: Actor, data: DataTable) =>
-    actor.attemptsTo(Table.compareToMetric(data, "KPI"))
+    actor.attemptsTo(
+      ESG.compareMetric(data, "KPI"),
+    ),
 );
 
 When(
