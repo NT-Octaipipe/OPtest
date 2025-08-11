@@ -1,5 +1,5 @@
 ### BDD Scenarios
-When suggesting BDD scenarios, use the Screenplay - have named actors performing Tasks and asking Questions.
+When suggesting BDD scenarios, use the Screenplay Pattern - have named actors performing Tasks and asking Questions.
 Limit the number of steps in each scenario to below 6. Avoid using "And" steps where possible.
 Use Gherkin data tables to clearly organise significant arguments in each step.
 Use Scenario Outlines and Examples where there are multiple possible variations on a scenario 
