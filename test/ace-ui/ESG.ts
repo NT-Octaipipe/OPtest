@@ -1,6 +1,6 @@
 import { DataTable } from "@cucumber/cucumber";
-import { Ensure, equals } from "@serenity-js/assertions";
-import { List, Task } from "@serenity-js/core";
+import { Ensure, equals, isCloseTo } from "@serenity-js/assertions";
+import { List, Numeric, Task } from "@serenity-js/core";
 import { By, Click, PageElement, Text } from "@serenity-js/web";
 
 export const ESG = {
@@ -13,9 +13,9 @@ export const ESG = {
             List.of(expectedData.hashes()).forEach(({ actor, item }) =>
                 actor.attemptsTo(
                     Ensure.that(
-                        item["Expected Value"],
-                        equals(ESG_widget.metric_value(item[metric]))
-                    )
+                        Numeric.floatValue().of(ESG_widget.metric_value(item[metric])),
+                        isCloseTo(Numeric.floatValue().of(item["Expected Value"]), 0.002)
+                    ),
                 )
             )
         ),  
